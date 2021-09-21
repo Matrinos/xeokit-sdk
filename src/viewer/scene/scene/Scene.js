@@ -1,23 +1,23 @@
-import {core} from '../core.js';
-import {utils} from '../utils.js';
-import {math} from '../math/math.js';
-import {Component} from '../Component.js';
-import {Canvas} from '../canvas/Canvas.js';
-import {Renderer} from '../webgl/Renderer.js';
-import {Input} from '../input/Input.js';
-import {Viewport} from '../viewport/Viewport.js';
-import {Camera} from '../camera/Camera.js';
-import {DirLight} from '../lights/DirLight.js';
-import {AmbientLight} from '../lights/AmbientLight.js';
-import {ReadableGeometry} from "../geometry/ReadableGeometry.js";
-import {buildBoxGeometry} from '../geometry/builders/buildBoxGeometry.js';
-import {PhongMaterial} from '../materials/PhongMaterial.js';
-import {EmphasisMaterial} from '../materials/EmphasisMaterial.js';
-import {EdgeMaterial} from '../materials/EdgeMaterial.js';
-import {Metrics} from "../metriqs/Metriqs.js";
-import {SAO} from "../postfx/SAO.js";
-import {PointsMaterial} from "../materials/PointsMaterial.js";
-import {LinesMaterial} from "../materials/LinesMaterial.js";
+import { core } from '../core.js';
+import { utils } from '../utils.js';
+import { math } from '../math/math.js';
+import { Component } from '../Component.js';
+import { Canvas } from '../canvas/Canvas.js';
+import { Renderer } from '../webgl/Renderer.js';
+import { Input } from '../input/Input.js';
+import { Viewport } from '../viewport/Viewport.js';
+import { Camera } from '../camera/Camera.js';
+import { DirLight } from '../lights/DirLight.js';
+import { AmbientLight } from '../lights/AmbientLight.js';
+import { ReadableGeometry } from "../geometry/ReadableGeometry.js";
+import { buildBoxGeometry } from '../geometry/builders/buildBoxGeometry.js';
+import { PhongMaterial } from '../materials/PhongMaterial.js';
+import { EmphasisMaterial } from '../materials/EmphasisMaterial.js';
+import { EdgeMaterial } from '../materials/EdgeMaterial.js';
+import { Metrics } from "../metriqs/Metriqs.js";
+import { SAO } from "../postfx/SAO.js";
+import { PointsMaterial } from "../materials/PointsMaterial.js";
+import { LinesMaterial } from "../materials/LinesMaterial.js";
 
 // Enables runtime check for redundant calls to object state update methods, eg. Scene#_objectVisibilityUpdated
 const ASSERT_OBJECT_STATE_UPDATE = false;
@@ -1205,6 +1205,29 @@ class Scene extends Component {
     }
 
     /**
+     * Sets whether physically-based rendering is enabled.
+     *
+     * Default is ````false````.
+     *
+     * @returns {Boolean} True if quality rendering is enabled.
+     */
+    set precision(isPrecision) {
+        this._isFading = isPrecision;
+        // this.glRedraw();
+    }
+
+    /**
+     * Sets whether quality rendering is enabled.
+     *
+     * Default is ````false````.
+     *
+     * @returns {Boolean} True if quality rendering is enabled.
+     */
+    get precision() {
+        return this._isFading;
+    }
+
+    /**
      * Performs an occlusion test on all {@link Marker}s in this {@link Scene}.
      *
      * Sets each {@link Marker#visible} ````true```` if the Marker is currently not occluded by any opaque {@link Entity}s
@@ -1266,7 +1289,11 @@ class Scene extends Component {
 
             clear = clearEachPass || (pass === 0);
 
-            this._renderer.render({pass: pass, clear: clear, force: forceRender});
+
+            window.requestAnimationFrame(() => {
+                this._renderer.render({ pass: pass, clear: clear, force: forceRender });
+            });
+
 
             /**
              * Fired when we have just rendered a frame for a Scene.
@@ -2148,29 +2175,29 @@ class Scene extends Component {
         let zmax = math.MIN_DOUBLE;
         let valid;
         this.withObjects(ids, entity => {
-                if (entity.collidable) {
-                    const aabb = entity.aabb;
-                    if (aabb[0] < xmin) {
-                        xmin = aabb[0];
-                    }
-                    if (aabb[1] < ymin) {
-                        ymin = aabb[1];
-                    }
-                    if (aabb[2] < zmin) {
-                        zmin = aabb[2];
-                    }
-                    if (aabb[3] > xmax) {
-                        xmax = aabb[3];
-                    }
-                    if (aabb[4] > ymax) {
-                        ymax = aabb[4];
-                    }
-                    if (aabb[5] > zmax) {
-                        zmax = aabb[5];
-                    }
-                    valid = true;
+            if (entity.collidable) {
+                const aabb = entity.aabb;
+                if (aabb[0] < xmin) {
+                    xmin = aabb[0];
                 }
+                if (aabb[1] < ymin) {
+                    ymin = aabb[1];
+                }
+                if (aabb[2] < zmin) {
+                    zmin = aabb[2];
+                }
+                if (aabb[3] > xmax) {
+                    xmax = aabb[3];
+                }
+                if (aabb[4] > ymax) {
+                    ymax = aabb[4];
+                }
+                if (aabb[5] > zmax) {
+                    zmax = aabb[5];
+                }
+                valid = true;
             }
+        }
         );
         if (valid) {
             const aabb2 = math.AABB3();
@@ -2462,4 +2489,4 @@ class Scene extends Component {
     }
 }
 
-export {Scene};
+export { Scene };

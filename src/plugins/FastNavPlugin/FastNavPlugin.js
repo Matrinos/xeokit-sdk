@@ -1,4 +1,4 @@
-import {Plugin} from "../../viewer/Plugin.js";
+import { Plugin } from "../../viewer/Plugin.js";
 
 /**
  * {@link Viewer} plugin that improves interactivity by disabling expensive rendering effects while the {@link Camera} is moving.
@@ -80,6 +80,7 @@ class FastNavPlugin extends Plugin {
                 viewer.scene.pbrEnabled = false;
                 viewer.scene.sao.enabled = false;
                 viewer.scene.edgeMaterial.edges = false;
+                viewer.scene.precision = false
                 fastMode = true;
             }
         });
@@ -91,6 +92,7 @@ class FastNavPlugin extends Plugin {
                 viewer.scene.pbrEnabled = false;
                 viewer.scene.sao.enabled = false;
                 viewer.scene.edgeMaterial.edges = false;
+                viewer.scene.precision = false
                 fastMode = true;
             }
         });
@@ -107,6 +109,7 @@ class FastNavPlugin extends Plugin {
                         viewer.scene.pbrEnabled = this._pbrEnabled;
                         viewer.scene.sao.enabled = this._saoEnabled;
                         viewer.scene.edgeMaterial.edges = this._edgesEnabled;
+                        viewer.scene.precision = true
                     }, 100);
 
                     fastMode = false;
@@ -221,6 +224,7 @@ class FastNavPlugin extends Plugin {
     }
 
     _cancelFade() {
+        this.viewer.scene.precision = false
         if (!this._img) {
             return;
         }
@@ -334,4 +338,4 @@ function cumulativeOffset(element) {
     };
 }
 
-export {FastNavPlugin}
+export { FastNavPlugin }

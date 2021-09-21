@@ -1,14 +1,14 @@
-import {FrameContext} from './FrameContext.js';
-import {RenderBuffer} from './RenderBuffer.js';
-import {math} from '../math/math.js';
-import {stats} from '../stats.js';
-import {WEBGL_INFO} from '../webglInfo.js';
-import {Map} from "../utils/Map.js";
-import {PickResult} from "./PickResult.js";
-import {OcclusionTester} from "./occlusion/OcclusionTester.js";
-import {SAOOcclusionRenderer} from "./sao/SAOOcclusionRenderer.js";
-import {createRTCViewMat} from "../math/rtcCoords.js";
-import {SAODepthLimitedBlurRenderer} from "./sao/SAODepthLimitedBlurRenderer.js";
+import { FrameContext } from './FrameContext.js';
+import { RenderBuffer } from './RenderBuffer.js';
+import { math } from '../math/math.js';
+import { stats } from '../stats.js';
+import { WEBGL_INFO } from '../webglInfo.js';
+import { Map } from "../utils/Map.js";
+import { PickResult } from "./PickResult.js";
+import { OcclusionTester } from "./occlusion/OcclusionTester.js";
+import { SAOOcclusionRenderer } from "./sao/SAOOcclusionRenderer.js";
+import { createRTCViewMat } from "../math/rtcCoords.js";
+import { SAODepthLimitedBlurRenderer } from "./sao/SAODepthLimitedBlurRenderer.js";
 
 /**
  * @private
@@ -464,6 +464,10 @@ const Renderer = function (scene, options) {
             frameCtx.withSAO = false;
             frameCtx.pbrEnabled = !!scene.pbrEnabled;
 
+
+            frameCtx.precision = scene.precision;
+
+
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
             if (canvasTransparent) {
@@ -613,32 +617,36 @@ const Renderer = function (scene, options) {
             // Render deferred bins
             //------------------------------------------------------------------------------------------------------
 
-            if (normalDrawSAOBinLen > 0) {
+            if (normalDrawSAOBinLen > 0 && frameCtx.precision) {
                 frameCtx.withSAO = true;
                 for (i = 0; i < normalDrawSAOBinLen; i++) {
                     normalDrawSAOBin[i].drawColorOpaque(frameCtx);
                 }
             }
 
-            if (normalEdgesOpaqueBinLen > 0) {
+            // need draw this at lease
+            if (normalEdgesOpaqueBinLen > 0 && frameCtx.precision) {
                 for (i = 0; i < normalEdgesOpaqueBinLen; i++) {
                     normalEdgesOpaqueBin[i].drawEdgesColorOpaque(frameCtx);
                 }
             }
 
-            if (xrayedFillOpaqueBinLen > 0) {
+            if (xrayedFillOpaqueBinLen > 0 && frameCtx.precision) {
                 for (i = 0; i < xrayedFillOpaqueBinLen; i++) {
                     xrayedFillOpaqueBin[i].drawSilhouetteXRayed(frameCtx);
                 }
             }
 
-            if (xrayEdgesOpaqueBinLen > 0) {
+            if (xrayEdgesOpaqueBinLen > 0 && frameCtx.precision) {
                 for (i = 0; i < xrayEdgesOpaqueBinLen; i++) {
                     xrayEdgesOpaqueBin[i].drawEdgesXRayed(frameCtx);
                 }
             }
 
-            if (xrayedFillTransparentBinLen > 0 || xrayEdgesTransparentBinLen > 0 || normalFillTransparentBinLen > 0 || normalEdgesTransparentBinLen > 0) {
+            if ((xrayedFillTransparentBinLen > 0
+                || xrayEdgesTransparentBinLen > 0
+                || normalFillTransparentBinLen > 0
+                || normalEdgesTransparentBinLen > 0) && frameCtx.precision) {
                 gl.enable(gl.CULL_FACE);
                 gl.enable(gl.BLEND);
 
@@ -664,6 +672,7 @@ const Renderer = function (scene, options) {
                         xrayedFillTransparentBin[i].drawSilhouetteXRayed(frameCtx);
                     }
                 }
+                // console.log("trans", frameCtx.transparent);
                 if (normalFillTransparentBinLen > 0 || normalEdgesTransparentBinLen > 0) {
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                 }
@@ -672,12 +681,14 @@ const Renderer = function (scene, options) {
                         drawable = normalEdgesTransparentBin[i];
                         drawable.drawEdgesColorTransparent(frameCtx);
                     }
+                    // console.log("normalEdgesTransparentBinLen", normalEdgesTransparentBin)
                 }
                 if (normalFillTransparentBinLen > 0) {
                     for (i = 0; i < normalFillTransparentBinLen; i++) {
                         drawable = normalFillTransparentBin[i];
                         drawable.drawColorTransparent(frameCtx);
                     }
+                    // console.log("normalEdgesTransparentBin", normalFillTransparentBin)
                 }
                 gl.disable(gl.BLEND);
                 if (!alphaDepthMask) {
@@ -685,7 +696,7 @@ const Renderer = function (scene, options) {
                 }
             }
 
-            if (highlightedFillOpaqueBinLen > 0 || highlightedEdgesOpaqueBinLen > 0) {
+            if ((highlightedFillOpaqueBinLen > 0 || highlightedEdgesOpaqueBinLen > 0) && frameCtx.precision) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 if (highlightedEdgesOpaqueBinLen > 0) {
@@ -700,7 +711,8 @@ const Renderer = function (scene, options) {
                 }
             }
 
-            if (highlightedFillTransparentBinLen > 0 || highlightedEdgesTransparentBinLen > 0 || highlightedFillOpaqueBinLen > 0) {
+            if ((highlightedFillTransparentBinLen > 0 || highlightedEdgesTransparentBinLen > 0
+                || highlightedFillOpaqueBinLen > 0) && frameCtx.precision) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 gl.enable(gl.CULL_FACE);
@@ -726,7 +738,7 @@ const Renderer = function (scene, options) {
                 gl.disable(gl.BLEND);
             }
 
-            if (selectedFillOpaqueBinLen > 0 || selectedEdgesOpaqueBinLen > 0) {
+            if ((selectedFillOpaqueBinLen > 0 || selectedEdgesOpaqueBinLen > 0) && frameCtx.precision) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 if (selectedEdgesOpaqueBinLen > 0) {
@@ -741,7 +753,7 @@ const Renderer = function (scene, options) {
                 }
             }
 
-            if (selectedFillTransparentBinLen > 0 || selectedEdgesTransparentBinLen > 0) {
+            if ((selectedFillTransparentBinLen > 0 || selectedEdgesTransparentBinLen > 0) && frameCtx.precision) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 gl.enable(gl.CULL_FACE);
@@ -875,7 +887,7 @@ const Renderer = function (scene, options) {
 
                     math.normalizeVec3(randomVec3);
                     math.cross3Vec3(worldRayDir, randomVec3, up);
-                    
+
                     pickViewMatrix = math.lookAtMat4v(worldRayOrigin, look, up, tempMat4b);
                     pickProjMatrix = pickFrustumMatrix;
 
@@ -1245,7 +1257,7 @@ const Renderer = function (scene, options) {
     this.readPixels = function (pixels, colors, len, opaqueOnly) {
         snapshotBuffer.bind();
         snapshotBuffer.clear();
-        this.render({force: true, opaqueOnly: opaqueOnly});
+        this.render({ force: true, opaqueOnly: opaqueOnly });
         let color;
         let i;
         let j;
@@ -1284,7 +1296,7 @@ const Renderer = function (scene, options) {
             return;
         }
         snapshotBuffer.clear();
-        this.render({force: true, opaqueOnly: false});
+        this.render({ force: true, opaqueOnly: false });
         imageDirty = true;
     };
 
@@ -1336,4 +1348,4 @@ const Renderer = function (scene, options) {
     };
 };
 
-export {Renderer};
+export { Renderer };

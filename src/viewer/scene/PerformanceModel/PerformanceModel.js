@@ -1,22 +1,22 @@
-import {Component} from "../Component.js";
-import {math} from "../math/math.js";
-import {buildEdgeIndices} from '../math/buildEdgeIndices.js';
-import {WEBGL_INFO} from '../webglInfo.js';
-import {PerformanceMesh} from './lib/PerformanceMesh.js';
-import {PerformanceNode} from './lib/PerformanceNode.js';
-import {getScratchMemory, putScratchMemory} from "./lib/ScratchMemory.js";
-import {TrianglesBatchingLayer} from './lib/layers/trianglesBatching/TrianglesBatchingLayer.js';
-import {TrianglesInstancingLayer} from './lib/layers/trianglesInstancing/TrianglesInstancingLayer.js';
-import {LinesBatchingLayer} from './lib/layers/linesBatching/LinesBatchingLayer.js';
-import {LinesInstancingLayer} from './lib/layers/linesInstancing/LinesInstancingLayer.js';
+import { Component } from "../Component.js";
+import { math } from "../math/math.js";
+import { buildEdgeIndices } from '../math/buildEdgeIndices.js';
+import { WEBGL_INFO } from '../webglInfo.js';
+import { PerformanceMesh } from './lib/PerformanceMesh.js';
+import { PerformanceNode } from './lib/PerformanceNode.js';
+import { getScratchMemory, putScratchMemory } from "./lib/ScratchMemory.js";
+import { TrianglesBatchingLayer } from './lib/layers/trianglesBatching/TrianglesBatchingLayer.js';
+import { TrianglesInstancingLayer } from './lib/layers/trianglesInstancing/TrianglesInstancingLayer.js';
+import { LinesBatchingLayer } from './lib/layers/linesBatching/LinesBatchingLayer.js';
+import { LinesInstancingLayer } from './lib/layers/linesInstancing/LinesInstancingLayer.js';
 
-import {PointsBatchingLayer} from './lib/layers/pointsBatching/PointsBatchingLayer.js';
-import {PointsInstancingLayer} from './lib/layers/pointsInstancing/PointsInstancingLayer.js';
+import { PointsBatchingLayer } from './lib/layers/pointsBatching/PointsBatchingLayer.js';
+import { PointsInstancingLayer } from './lib/layers/pointsInstancing/PointsInstancingLayer.js';
 
 
-import {ENTITY_FLAGS} from './lib/ENTITY_FLAGS.js';
-import {utils} from "../utils.js";
-import {RenderFlags} from "../webgl/RenderFlags.js";
+import { ENTITY_FLAGS } from './lib/ENTITY_FLAGS.js';
+import { utils } from "../utils.js";
+import { RenderFlags } from "../webgl/RenderFlags.js";
 
 const instancedArraysSupported = WEBGL_INFO.SUPPORTED_EXTENSIONS["ANGLE_instanced_arrays"];
 
@@ -2418,11 +2418,37 @@ class PerformanceModel extends Component {
 
     /** @private */
     drawColorOpaque(frameCtx) {
-        const renderFlags = this.renderFlags;
-        for (let i = 0, len = renderFlags.visibleLayers.length; i < len; i++) {
-            const layerIndex = renderFlags.visibleLayers[i];
-            this._layerList[layerIndex].drawColorOpaque(renderFlags, frameCtx);
+        let totalTri = 0;
+        let entities = 0;
+        let geo = 0;
+        let points = 0;
+        // const renderFlags = this.renderFlags;
+        for (let i = 0; i < this.renderFlags.visibleLayers.length; i++) {
+            // console.log("fading", frameCtx.precision)
+            const layerIndex = this.renderFlags.visibleLayers[i];
+            if (!frameCtx.precision) {
+                if (layerIndex % 2 === 0) {
+                    this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
+                }
+                // console.log("layer", this._layerList[layerIndex].model.numTriangles)
+                // } else {
+                // if (!frameCtx.precision) {
+                //     if (this._layerList[layerIndex].model.numTriangles > 200000) {
+                //         this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
+                //     }
+            } else {
+
+                totalTri += this._layerList[layerIndex].model.numTriangles;
+                entities += this._layerList[layerIndex].model.numEntities;
+                geo += this._layerList[layerIndex].model.numGeometries;
+                points = + this._layerList[layerIndex].model.numPoints;
+                this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
+            }
+
+            // }
+
         }
+        console.log("total-tri", totalTri, entities, geo, points);
     }
 
     /** @private */
@@ -2624,4 +2650,4 @@ class PerformanceModel extends Component {
     }
 }
 
-export {PerformanceModel};
+export { PerformanceModel };
