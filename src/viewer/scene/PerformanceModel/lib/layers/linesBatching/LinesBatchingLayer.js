@@ -623,6 +623,12 @@ class LinesBatchingLayer {
     //-- RENDERING ----------------------------------------------------------------------------------------------
 
     drawColorOpaque(renderFlags, frameCtx) {
+        const entityDiagSize = math.getAABB3Diag(this._modelAABB);
+        // console.log("size", entityDiagSize);
+        if (entityDiagSize<=30){
+            return
+        }
+
         if (this._numCulledLayerPortions === this._numPortions || this._numVisibleLayerPortions === 0 || this._numTransparentLayerPortions === this._numPortions || this._numXRayedLayerPortions === this._numPortions) {
             return;
         }

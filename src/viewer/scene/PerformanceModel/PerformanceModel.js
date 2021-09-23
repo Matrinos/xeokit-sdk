@@ -2426,29 +2426,29 @@ class PerformanceModel extends Component {
         for (let i = 0; i < this.renderFlags.visibleLayers.length; i++) {
             // console.log("fading", frameCtx.precision)
             const layerIndex = this.renderFlags.visibleLayers[i];
-            if (!frameCtx.precision) {
-                if (layerIndex % 2 === 0) {
-                    this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
-                }
-                // console.log("layer", this._layerList[layerIndex].model.numTriangles)
-                // } else {
-                // if (!frameCtx.precision) {
-                //     if (this._layerList[layerIndex].model.numTriangles > 200000) {
-                //         this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
-                //     }
-            } else {
+            // if (!frameCtx.precision) {
+            //     if (layerIndex % 2 === 0) {
+            //         this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
+            //     }
+            //     // console.log("layer", this._layerList[layerIndex].model.numTriangles)
+            //     // } else {
+            //     // if (!frameCtx.precision) {
+            //     //     if (this._layerList[layerIndex].model.numTriangles > 200000) {
+            //     //         this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
+            //     //     }
+            // } else {
 
-                totalTri += this._layerList[layerIndex].model.numTriangles;
-                entities += this._layerList[layerIndex].model.numEntities;
-                geo += this._layerList[layerIndex].model.numGeometries;
-                points = + this._layerList[layerIndex].model.numPoints;
+                // totalTri += this._layerList[layerIndex].model.numTriangles;
+                // entities += this._layerList[layerIndex].model.numEntities;
+                // geo += this._layerList[layerIndex].model.numGeometries;
+                // points = + this._layerList[layerIndex].model.numPoints;
                 this._layerList[layerIndex].drawColorOpaque(this.renderFlags, frameCtx);
-            }
+            // }
 
             // }
 
         }
-        console.log("total-tri", totalTri, entities, geo, points);
+        // console.log("total-tri", totalTri, entities, geo, points);
     }
 
     /** @private */
