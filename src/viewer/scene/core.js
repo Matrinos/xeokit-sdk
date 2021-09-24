@@ -1,12 +1,12 @@
-import {Queue} from './utils/Queue.js';
-import {Map} from './utils/Map.js';
-import {stats} from './stats.js';
-import {utils} from './utils.js';
+import { Queue } from './utils/Queue.js';
+import { Map } from './utils/Map.js';
+import { stats } from './stats.js';
+import { utils } from './utils.js';
 
 const scenesRenderInfo = {}; // Used for throttling FPS for each Scene
 const sceneIDMap = new Map(); // Ensures unique scene IDs
 const taskQueue = new Queue(); // Task queue, which is pumped on each frame; tasks are pushed to it with calls to xeokit.schedule
-const tickEvent = {sceneId: null, time: null, startTime: null, prevTime: null, deltaTime: null};
+const tickEvent = { sceneId: null, time: null, startTime: null, prevTime: null, deltaTime: null };
 const taskBudget = 10; // Millisecs we're allowed to spend on tasks in each frame
 const fpsSamples = [];
 const numFPSSamples = 30;
@@ -150,10 +150,10 @@ const frame = function () {
         stats.frame.fps = Math.round(totalFPS / fpsSamples.length);
     }
     runTasks(time);
-    fireTickEvents(time);
-    renderScenes();
+    // fireTickEvents(time);
+    // renderScenes();
     lastTime = time;
-    window.requestAnimationFrame(frame);
+
 };
 
 function runTasks(time) { // Process as many enqueued tasks as we can within the per-frame task budget
@@ -229,6 +229,14 @@ function renderScenes() {
     }
 }
 
-window.requestAnimationFrame(frame);
+// window.requestAnimationFrame(frame);
+setInterval(frame, 20)
+setInterval(() => {
+    fireTickEvents(Date.now());
+}, 10);
 
-export {core};
+setInterval(() => {
+    renderScenes();
+}, 20);
+
+export { core };
