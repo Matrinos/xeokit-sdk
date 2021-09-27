@@ -558,12 +558,16 @@ class LinesInstancingLayer {
 
     // ---------------------- NORMAL RENDERING -----------------------------------
 
+    isTooSmall(){
+        return  math.getAABB3Diag(this.aabb) <70;
+    }
+
     drawColorOpaque(renderFlags, frameCtx) {
-        const entityDiagSize = math.getAABB3Diag(this.aabb);
-        // console.log("size", entityDiagSize);
-        if (entityDiagSize<=30){
-            return
+        
+        if(this.isTooSmall()){
+            return;
         }
+
         if (this._numCulledLayerPortions === this._numPortions || this._numVisibleLayerPortions === 0 || this._numTransparentLayerPortions === this._numPortions || this._numXRayedLayerPortions === this._numPortions) {
             return;
         }
@@ -574,6 +578,10 @@ class LinesInstancingLayer {
     }
 
     drawColorTransparent(renderFlags, frameCtx) {
+        if(this.isTooSmall()){
+            return;
+        }
+
         if (this._numCulledLayerPortions === this._numPortions || this._numVisibleLayerPortions === 0 || this._numTransparentLayerPortions === 0 || this._numXRayedLayerPortions === this._numPortions) {
             return;
         }

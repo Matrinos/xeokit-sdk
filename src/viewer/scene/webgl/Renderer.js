@@ -617,7 +617,7 @@ const Renderer = function (scene, options) {
             // Render deferred bins
             //------------------------------------------------------------------------------------------------------
 
-            if (normalDrawSAOBinLen > 0 && frameCtx.precision) {
+            if (normalDrawSAOBinLen > 0 ) {
                 frameCtx.withSAO = true;
                 for (i = 0; i < normalDrawSAOBinLen; i++) {
                     normalDrawSAOBin[i].drawColorOpaque(frameCtx);
@@ -625,19 +625,19 @@ const Renderer = function (scene, options) {
             }
 
             // need draw this at lease
-            if (normalEdgesOpaqueBinLen > 0 && frameCtx.precision) {
+            if (normalEdgesOpaqueBinLen > 0 ) {
                 for (i = 0; i < normalEdgesOpaqueBinLen; i++) {
                     normalEdgesOpaqueBin[i].drawEdgesColorOpaque(frameCtx);
                 }
             }
 
-            if (xrayedFillOpaqueBinLen > 0 && frameCtx.precision) {
+            if (xrayedFillOpaqueBinLen > 0 ) {
                 for (i = 0; i < xrayedFillOpaqueBinLen; i++) {
                     xrayedFillOpaqueBin[i].drawSilhouetteXRayed(frameCtx);
                 }
             }
 
-            if (xrayEdgesOpaqueBinLen > 0 && frameCtx.precision) {
+            if (xrayEdgesOpaqueBinLen > 0 ) {
                 for (i = 0; i < xrayEdgesOpaqueBinLen; i++) {
                     xrayEdgesOpaqueBin[i].drawEdgesXRayed(frameCtx);
                 }
@@ -646,7 +646,7 @@ const Renderer = function (scene, options) {
             if ((xrayedFillTransparentBinLen > 0
                 || xrayEdgesTransparentBinLen > 0
                 || normalFillTransparentBinLen > 0
-                || normalEdgesTransparentBinLen > 0) && frameCtx.precision) {
+                || normalEdgesTransparentBinLen > 0) ) {
                 gl.enable(gl.CULL_FACE);
                 gl.enable(gl.BLEND);
 
@@ -676,14 +676,14 @@ const Renderer = function (scene, options) {
                 if (normalFillTransparentBinLen > 0 || normalEdgesTransparentBinLen > 0) {
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                 }
-                if (normalEdgesTransparentBinLen > 0) {
+                if (normalEdgesTransparentBinLen > 0 && frameCtx.precision) {
                     for (i = 0; i < normalEdgesTransparentBinLen; i++) {
                         drawable = normalEdgesTransparentBin[i];
                         drawable.drawEdgesColorTransparent(frameCtx);
                     }
                     // console.log("normalEdgesTransparentBinLen", normalEdgesTransparentBin)
                 }
-                if (normalFillTransparentBinLen > 0) {
+                if (normalFillTransparentBinLen > 0 && frameCtx.precision) {
                     for (i = 0; i < normalFillTransparentBinLen; i++) {
                         drawable = normalFillTransparentBin[i];
                         drawable.drawColorTransparent(frameCtx);
@@ -696,7 +696,7 @@ const Renderer = function (scene, options) {
                 }
             }
 
-            if ((highlightedFillOpaqueBinLen > 0 || highlightedEdgesOpaqueBinLen > 0) && frameCtx.precision) {
+            if ((highlightedFillOpaqueBinLen > 0 || highlightedEdgesOpaqueBinLen > 0) ) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 if (highlightedEdgesOpaqueBinLen > 0) {
@@ -712,7 +712,7 @@ const Renderer = function (scene, options) {
             }
 
             if ((highlightedFillTransparentBinLen > 0 || highlightedEdgesTransparentBinLen > 0
-                || highlightedFillOpaqueBinLen > 0) && frameCtx.precision) {
+                || highlightedFillOpaqueBinLen > 0) ) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 gl.enable(gl.CULL_FACE);
@@ -738,7 +738,7 @@ const Renderer = function (scene, options) {
                 gl.disable(gl.BLEND);
             }
 
-            if ((selectedFillOpaqueBinLen > 0 || selectedEdgesOpaqueBinLen > 0) && frameCtx.precision) {
+            if ((selectedFillOpaqueBinLen > 0 || selectedEdgesOpaqueBinLen > 0) ) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 if (selectedEdgesOpaqueBinLen > 0) {
@@ -753,7 +753,7 @@ const Renderer = function (scene, options) {
                 }
             }
 
-            if ((selectedFillTransparentBinLen > 0 || selectedEdgesTransparentBinLen > 0) && frameCtx.precision) {
+            if ((selectedFillTransparentBinLen > 0 || selectedEdgesTransparentBinLen > 0) ) {
                 frameCtx.lastProgramId = null;
                 gl.clear(gl.DEPTH_BUFFER_BIT);
                 gl.enable(gl.CULL_FACE);
