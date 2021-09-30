@@ -1,4 +1,5 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
 
 export default {
     input: './src/index.js',
@@ -6,10 +7,15 @@ export default {
         {
             file: './dist/xeokit-sdk.es.js',
             format: 'es',
-            name: 'bundle'
+            name: 'bundle',
+            sourcemap: true,
         }
     ],
     plugins: [
-        nodeResolve()
+        nodeResolve(),
+        babel({
+            babelrc: false,
+            presets: [['@babel/env', { modules: false }]],
+        }),
     ]
 }

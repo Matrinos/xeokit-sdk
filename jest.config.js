@@ -15,6 +15,6 @@ module.exports = async () => {
     transform: {
       "\\.(js|ts|jsx|tsx)$": "babel-jest",
     },
-    verbose: true,
+    verbose: false,
   };
 };

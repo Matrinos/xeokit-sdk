@@ -10,19 +10,19 @@
     ]
   ],
   "plugins": [
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-object-rest-spread",
-    "transform-es2015-modules-commonjs",
+    // "@babel/plugin-proposal-class-properties",
+    // "@babel/plugin-proposal-object-rest-spread",
+    // "transform-es2015-modules-commonjs",
     "babel-plugin-dynamic-import-node"
   ],
-  "sourceMaps": "inline",
+  "sourceMaps": true,
   "retainLines": true,
-  "env": {
-    "development": {
-      "plugins": ["transform-es2015-modules-commonjs"]
-    },
-    "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
-    }
-  }
+  // "env": {
+  //   "development": {
+  //     "plugins": ["transform-es2015-modules-commonjs"]
+  //   },
+  //   "test": {
+  //     "plugins": ["transform-es2015-modules-commonjs"]
+  //   }
+  // }
 }
