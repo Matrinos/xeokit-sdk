@@ -94,8 +94,9 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
         this._bindProgram(frameCtx);
     }
 
-    gl.uniformMatrix4fv(this._uViewMatrix, false, rtcCenter ? frameCtx.getRTCViewMatrix(meshState.rtcCenterHash, rtcCenter) : camera.viewMatrix);
-    gl.uniformMatrix4fv(this._uViewNormalMatrix, false, camera.viewNormalMatrix);
+    const tempMatrix = rtcCenter ? frameCtx.getRTCViewMatrix(meshState.rtcCenterHash, rtcCenter) : camera.viewMatrix;
+    gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(tempMatrix));
+    gl.uniformMatrix4fv(this._uViewNormalMatrix, false, Float32Array.from(camera.viewNormalMatrix));
 
     if (meshState.clippable) {
         const numSectionPlanes = scene._sectionPlanesState.sectionPlanes.length;
@@ -192,7 +193,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uMaterialAmbientMapMatrix) {
-                        gl.uniformMatrix4fv(this._uMaterialAmbientMapMatrix, false, material._ambientMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uMaterialAmbientMapMatrix, false, Float32Array.from(material._ambientMap._state.matrix));
                     }
                 }
                 if (material._diffuseMap && material._diffuseMap._state.texture && this._uDiffuseMap) {
@@ -200,7 +201,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uDiffuseMapMatrix) {
-                        gl.uniformMatrix4fv(this._uDiffuseMapMatrix, false, material._diffuseMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uDiffuseMapMatrix, false, Float32Array.from(material._diffuseMap._state.matrix));
                     }
                 }
                 if (material._specularMap && material._specularMap._state.texture && this._uSpecularMap) {
@@ -208,7 +209,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uSpecularMapMatrix) {
-                        gl.uniformMatrix4fv(this._uSpecularMapMatrix, false, material._specularMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uSpecularMapMatrix, false, Float32Array.from(material._specularMap._state.matrix));
                     }
                 }
                 if (material._emissiveMap && material._emissiveMap._state.texture && this._uEmissiveMap) {
@@ -216,7 +217,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uEmissiveMapMatrix) {
-                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, material._emissiveMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, Float32Array.from(material._emissiveMap._state.matrix));
                     }
                 }
                 if (material._alphaMap && material._alphaMap._state.texture && this._uAlphaMap) {
@@ -224,14 +225,14 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uAlphaMapMatrix) {
-                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, material._alphaMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, Float32Array.from(material._alphaMap._state.matrix));
                     }
                 }
                 if (material._reflectivityMap && material._reflectivityMap._state.texture && this._uReflectivityMap) {
                     program.bindTexture(this._uReflectivityMap, material._reflectivityMap._state.texture, frameCtx.textureUnit);
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     if (this._uReflectivityMapMatrix) {
-                        gl.uniformMatrix4fv(this._uReflectivityMapMatrix, false, material._reflectivityMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uReflectivityMapMatrix, false, Float32Array.from(material._reflectivityMap._state.matrix));
                     }
                 }
                 if (material._normalMap && material._normalMap._state.texture && this._uNormalMap) {
@@ -239,7 +240,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uNormalMapMatrix) {
-                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, material._normalMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, Float32Array.from(material._normalMap._state.matrix));
                     }
                 }
                 if (material._occlusionMap && material._occlusionMap._state.texture && this._uOcclusionMap) {
@@ -247,7 +248,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uOcclusionMapMatrix) {
-                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, material._occlusionMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, Float32Array.from(material._occlusionMap._state.matrix));
                     }
                 }
                 if (material._diffuseFresnel) {
@@ -367,7 +368,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uBaseColorMapMatrix) {
-                        gl.uniformMatrix4fv(this._uBaseColorMapMatrix, false, baseColorMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uBaseColorMapMatrix, false, Float32Array.from(baseColorMap._state.matrix));
                     }
                 }
                 const metallicMap = material._metallicMap;
@@ -376,7 +377,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uMetallicMapMatrix) {
-                        gl.uniformMatrix4fv(this._uMetallicMapMatrix, false, metallicMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uMetallicMapMatrix, false, Float32Array.from(metallicMap._state.matrix));
                     }
                 }
                 const roughnessMap = material._roughnessMap;
@@ -385,7 +386,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uRoughnessMapMatrix) {
-                        gl.uniformMatrix4fv(this._uRoughnessMapMatrix, false, roughnessMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uRoughnessMapMatrix, false, Float32Array.from(roughnessMap._state.matrix));
                     }
                 }
                 const metallicRoughnessMap = material._metallicRoughnessMap;
@@ -394,7 +395,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uMetallicRoughnessMapMatrix) {
-                        gl.uniformMatrix4fv(this._uMetallicRoughnessMapMatrix, false, metallicRoughnessMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uMetallicRoughnessMapMatrix, false, Float32Array.from(metallicRoughnessMap._state.matrix));
                     }
                 }
                 var emissiveMap = material._emissiveMap;
@@ -403,7 +404,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uEmissiveMapMatrix) {
-                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, emissiveMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, Float32Array.from(emissiveMap._state.matrix));
                     }
                 }
                 var occlusionMap = material._occlusionMap;
@@ -412,7 +413,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uOcclusionMapMatrix) {
-                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, occlusionMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, Float32Array.from(occlusionMap._state.matrix));
                     }
                 }
                 var alphaMap = material._alphaMap;
@@ -421,7 +422,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uAlphaMapMatrix) {
-                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, alphaMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, Float32Array.from(alphaMap._state.matrix));
                     }
                 }
                 var normalMap = material._normalMap;
@@ -430,7 +431,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uNormalMapMatrix) {
-                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, normalMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, Float32Array.from(normalMap._state.matrix));
                     }
                 }
                 break;
@@ -465,7 +466,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uDiffuseMapMatrix) {
-                        gl.uniformMatrix4fv(this._uDiffuseMapMatrix, false, diffuseMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uDiffuseMapMatrix, false, Float32Array.from(diffuseMap._state.matrix));
                     }
                 }
                 const specularMap = material._specularMap;
@@ -474,7 +475,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uSpecularMapMatrix) {
-                        gl.uniformMatrix4fv(this._uSpecularMapMatrix, false, specularMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uSpecularMapMatrix, false, Float32Array.from(specularMap._state.matrix));
                     }
                 }
                 const glossinessMap = material._glossinessMap;
@@ -483,7 +484,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uGlossinessMapMatrix) {
-                        gl.uniformMatrix4fv(this._uGlossinessMapMatrix, false, glossinessMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uGlossinessMapMatrix, false, Float32Array.from(glossinessMap._state.matrix));
                     }
                 }
                 const specularGlossinessMap = material._specularGlossinessMap;
@@ -492,7 +493,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uSpecularGlossinessMapMatrix) {
-                        gl.uniformMatrix4fv(this._uSpecularGlossinessMapMatrix, false, specularGlossinessMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uSpecularGlossinessMapMatrix, false, Float32Array.from(specularGlossinessMap._state.matrix));
                     }
                 }
                 var emissiveMap = material._emissiveMap;
@@ -501,7 +502,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uEmissiveMapMatrix) {
-                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, emissiveMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uEmissiveMapMatrix, false, Float32Array.from(emissiveMap._state.matrix));
                     }
                 }
                 var occlusionMap = material._occlusionMap;
@@ -510,7 +511,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uOcclusionMapMatrix) {
-                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, occlusionMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uOcclusionMapMatrix, false, Float32Array.from(occlusionMap._state.matrix));
                     }
                 }
                 var alphaMap = material._alphaMap;
@@ -519,7 +520,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uAlphaMapMatrix) {
-                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, alphaMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uAlphaMapMatrix, false, Float32Array.from(alphaMap._state.matrix));
                     }
                 }
                 var normalMap = material._normalMap;
@@ -528,7 +529,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
                     frameCtx.textureUnit = (frameCtx.textureUnit + 1) % maxTextureUnits;
                     frameCtx.bindTexture++;
                     if (this._uNormalMapMatrix) {
-                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, normalMap._state.matrix);
+                        gl.uniformMatrix4fv(this._uNormalMapMatrix, false, Float32Array.from(normalMap._state.matrix));
                     }
                 }
                 break;
@@ -536,9 +537,9 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
         this._lastMaterialId = materialState.id;
     }
 
-    gl.uniformMatrix4fv(this._uModelMatrix, gl.FALSE, mesh.worldMatrix);
+    gl.uniformMatrix4fv(this._uModelMatrix, gl.FALSE, Float32Array.from(mesh.worldMatrix));
     if (this._uModelNormalMatrix) {
-        gl.uniformMatrix4fv(this._uModelNormalMatrix, gl.FALSE, mesh.worldNormalMatrix);
+        gl.uniformMatrix4fv(this._uModelNormalMatrix, gl.FALSE, Float32Array.from(mesh.worldNormalMatrix));
     }
 
     if (this._uClippable) {
@@ -566,7 +567,7 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
 
     if (geometryState.id !== this._lastGeometryId) {
         if (this._uPositionsDecodeMatrix) {
-            gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, geometryState.positionsDecodeMatrix);
+            gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(geometryState.positionsDecodeMatrix));
         }
         if (this._uUVDecodeMatrix) {
             gl.uniformMatrix3fv(this._uUVDecodeMatrix, false, geometryState.uvDecodeMatrix);
@@ -916,7 +917,7 @@ DrawRenderer.prototype._bindProgram = function (frameCtx) {
     this._lastColorize[2] = -1;
     this._lastColorize[3] = -1;
 
-    gl.uniformMatrix4fv(this._uProjMatrix, false, project.matrix);
+    gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(project.matrix));
 
     if (scene.logarithmicDepthBufferEnabled) {
         const logDepthBufFC = 2.0 / (Math.log(project.far + 1.0) / Math.LN2);
@@ -949,10 +950,10 @@ DrawRenderer.prototype._bindProgram = function (frameCtx) {
 
             if (light.castsShadow) {
                 if (this._uShadowViewMatrix[i]) {
-                    gl.uniformMatrix4fv(this._uShadowViewMatrix[i], false, light.getShadowViewMatrix());
+                    gl.uniformMatrix4fv(this._uShadowViewMatrix[i], false, Float32Array.from(light.getShadowViewMatrix()));
                 }
                 if (this._uShadowProjMatrix[i]) {
-                    gl.uniformMatrix4fv(this._uShadowProjMatrix[i], false, light.getShadowProjMatrix());
+                    gl.uniformMatrix4fv(this._uShadowProjMatrix[i], false, Float32Array.from(light.getShadowProjMatrix()));
                 }
                 const shadowRenderBuf = light.getShadowRenderBuf();
                 if (shadowRenderBuf) {

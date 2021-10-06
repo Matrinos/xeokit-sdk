@@ -51,11 +51,12 @@ class TrianglesInstancingColorRenderer {
 
         gl.uniform1i(this._uRenderPass, renderPass);
 
-        gl.uniformMatrix4fv(this._uViewMatrix, false, (rtcCenter) ? createRTCViewMat(camera.viewMatrix, rtcCenter) : camera.viewMatrix);
-        gl.uniformMatrix4fv(this._uViewNormalMatrix, false, camera.viewNormalMatrix);
+        const tempMatrix = (rtcCenter) ? createRTCViewMat(camera.viewMatrix, rtcCenter) : camera.viewMatrix;
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(tempMatrix));
+        gl.uniformMatrix4fv(this._uViewNormalMatrix, false, Float32Array.from(camera.viewNormalMatrix));
 
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
-        gl.uniformMatrix4fv(this._uWorldNormalMatrix, false, model.worldNormalMatrix);
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
+        gl.uniformMatrix4fv(this._uWorldNormalMatrix, false, Float32Array.from(model.worldNormalMatrix));
 
         const numSectionPlanes = scene._sectionPlanesState.sectionPlanes.length;
         if (numSectionPlanes > 0) {
@@ -81,7 +82,7 @@ class TrianglesInstancingColorRenderer {
             }
         }
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, instancingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(instancingLayer._state.positionsDecodeMatrix));
 
         this._aModelMatrixCol0.bindArrayBuffer(state.modelMatrixCol0Buf);
         this._aModelMatrixCol1.bindArrayBuffer(state.modelMatrixCol1Buf);

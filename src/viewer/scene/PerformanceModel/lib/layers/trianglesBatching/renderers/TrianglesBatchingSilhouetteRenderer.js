@@ -72,9 +72,9 @@ class TrianglesBatchingSilhouetteRenderer {
         }
 
         const viewMat = (rtcCenter) ? createRTCViewMat(camera.viewMatrix, rtcCenter) : camera.viewMatrix;
-        gl.uniformMatrix4fv(this._uViewMatrix, false, viewMat);
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(viewMat));
 
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
 
         const numSectionPlanes = scene._sectionPlanesState.sectionPlanes.length;
         if (numSectionPlanes > 0) {
@@ -100,7 +100,7 @@ class TrianglesBatchingSilhouetteRenderer {
             }
         }
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, batchingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(batchingLayer._state.positionsDecodeMatrix));
 
         this._aPosition.bindArrayBuffer(state.positionsBuf);
 
@@ -169,7 +169,7 @@ class TrianglesBatchingSilhouetteRenderer {
 
         this._program.bind();
 
-        gl.uniformMatrix4fv(this._uProjMatrix, false, project.matrix);
+        gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(project.matrix));
 
         if (scene.logarithmicDepthBufferEnabled) {
             const logDepthBufFC = 2.0 / (Math.log(project.far + 1.0) / Math.LN2);

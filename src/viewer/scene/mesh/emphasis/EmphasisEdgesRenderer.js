@@ -80,7 +80,8 @@ EmphasisEdgesRenderer.prototype.drawMesh = function (frameCtx, mesh, mode) {
         this._bindProgram(frameCtx);
     }
 
-    gl.uniformMatrix4fv(this._uViewMatrix, false, rtcCenter ? frameCtx.getRTCViewMatrix(meshState.rtcCenterHash, rtcCenter) : camera.viewMatrix);
+    const tempMatrix = rtcCenter ? frameCtx.getRTCViewMatrix(meshState.rtcCenterHash, rtcCenter) : camera.viewMatrix;
+    gl.uniformMatrix4fv(this._uViewMatrix, false, tempMatrix);
 
     if (meshState.clippable) {
         const numSectionPlanes = scene._sectionPlanesState.sectionPlanes.length;
@@ -140,7 +141,7 @@ EmphasisEdgesRenderer.prototype.drawMesh = function (frameCtx, mesh, mode) {
         this._lastMaterialId = materialState.id;
     }
 
-    gl.uniformMatrix4fv(this._uModelMatrix, gl.FALSE, mesh.worldMatrix);
+    gl.uniformMatrix4fv(this._uModelMatrix, gl.FALSE, Float32Array.from(mesh.worldMatrix));
 
     if (this._uClippable) {
         gl.uniform1i(this._uClippable, meshState.clippable);
@@ -159,7 +160,7 @@ EmphasisEdgesRenderer.prototype.drawMesh = function (frameCtx, mesh, mode) {
     if (indicesBuf) {
         if (geometryState.id !== this._lastGeometryId) {
             if (this._uPositionsDecodeMatrix) {
-                gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, geometryState.positionsDecodeMatrix);
+                gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(geometryState.positionsDecodeMatrix));
             }
             if (this._aPosition) {
                 this._aPosition.bindArrayBuffer(geometryState.positionsBuf, geometryState.compressGeometry ? gl.UNSIGNED_SHORT : gl.FLOAT);
@@ -234,7 +235,7 @@ EmphasisEdgesRenderer.prototype._bindProgram = function (frameCtx) {
     this._lastVertexBufsId = null;
     this._lastGeometryId = null;
 
-    gl.uniformMatrix4fv(this._uProjMatrix, false, project.matrix);
+    gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(project.matrix));
 
     if (scene.logarithmicDepthBufferEnabled ) {
         const logDepthBufFC = 2.0 / (Math.log(project.far + 1.0) / Math.LN2);

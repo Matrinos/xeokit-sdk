@@ -45,13 +45,13 @@ class TrianglesBatchingPickNormalsRenderer {
         gl.uniform1i(this._uRenderPass, renderPass);
         gl.uniform1i(this._uPickInvisible, frameCtx.pickInvisible);
 
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
 
         const pickViewMatrix = frameCtx.pickViewMatrix || camera.viewMatrix;
         const viewMatrix = rtcCenter ? createRTCViewMat(pickViewMatrix, rtcCenter) : pickViewMatrix;
 
-        gl.uniformMatrix4fv(this._uViewMatrix, false, viewMatrix);
-        gl.uniformMatrix4fv(this._uProjMatrix, false, frameCtx.pickProjMatrix);
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(viewMatrix));
+        gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(frameCtx.pickProjMatrix));
 
         if (scene.logarithmicDepthBufferEnabled) {
             const logDepthBufFC = 2.0 / (Math.log(camera.project.far + 1.0) / Math.LN2);  // TODO: Far should be from projection matrix?
@@ -86,7 +86,7 @@ class TrianglesBatchingPickNormalsRenderer {
         // TODO: Use drawElements count and offset to draw only one entity
         //=============================================================
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, batchingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(batchingLayer._state.positionsDecodeMatrix));
 
         this._aPosition.bindArrayBuffer(state.positionsBuf);
 

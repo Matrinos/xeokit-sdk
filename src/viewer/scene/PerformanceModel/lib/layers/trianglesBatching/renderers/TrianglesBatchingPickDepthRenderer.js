@@ -49,9 +49,9 @@ class TrianglesBatchingPickDepthRenderer {
         const pickViewMatrix = frameCtx.pickViewMatrix || camera.viewMatrix;
         const viewMatrix = rtcCenter ? createRTCViewMat(pickViewMatrix, rtcCenter) : pickViewMatrix;
 
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
-        gl.uniformMatrix4fv(this._uViewMatrix, false, viewMatrix);
-        gl.uniformMatrix4fv(this._uProjMatrix, false, frameCtx.pickProjMatrix);
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(viewMatrix));
+        gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(frameCtx.pickProjMatrix));
 
         gl.uniform1f(this._uPickZNear, frameCtx.pickZNear);
         gl.uniform1f(this._uPickZFar, frameCtx.pickZFar);
@@ -89,7 +89,7 @@ class TrianglesBatchingPickDepthRenderer {
         // TODO: Use drawElements count and offset to draw only one entity
         //=============================================================
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, batchingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(batchingLayer._state.positionsDecodeMatrix));
 
         this._aPosition.bindArrayBuffer(state.positionsBuf);
 

@@ -56,11 +56,11 @@ class TrianglesInstancingPickNormalsRenderer {
         const pickViewMatrix = frameCtx.pickViewMatrix || camera.viewMatrix;
         const rtcPickViewMatrix = (rtcCenter) ? createRTCViewMat(pickViewMatrix, rtcCenter) : pickViewMatrix;
 
-        gl.uniformMatrix4fv(this._uViewMatrix, false, rtcPickViewMatrix);
-        gl.uniformMatrix4fv(this._uProjMatrix, false, frameCtx.pickProjMatrix);
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(rtcPickViewMatrix));
+        gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(frameCtx.pickProjMatrix));
 
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
-        gl.uniformMatrix4fv(this._uWorldNormalMatrix, false, model.worldNormalMatrix);
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
+        gl.uniformMatrix4fv(this._uWorldNormalMatrix, false, Float32Array.from(model.worldNormalMatrix));
 
         if (scene.logarithmicDepthBufferEnabled) {
             const logDepthBufFC = 2.0 / (Math.log(camera.project.far + 1.0) / Math.LN2); // TODO: Far from pick project matrix?
@@ -91,7 +91,7 @@ class TrianglesInstancingPickNormalsRenderer {
             }
         }
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, instancingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(instancingLayer._state.positionsDecodeMatrix));
 
         this._aModelMatrixCol0.bindArrayBuffer(state.modelMatrixCol0Buf);
         this._aModelMatrixCol1.bindArrayBuffer(state.modelMatrixCol1Buf);

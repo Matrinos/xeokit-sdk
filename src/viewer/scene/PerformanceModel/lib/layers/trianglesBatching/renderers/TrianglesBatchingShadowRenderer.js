@@ -36,7 +36,7 @@ class TrianglesBatchingShadowRenderer {
             frameCtx.lastProgramId = this._program.id;
             this._bindProgram(frameCtx);
         }
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, batchingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(batchingLayer._state.positionsDecodeMatrix));
         if (scene.logarithmicDepthBufferEnabled) {
             gl.uniform1f(this._uZFar, scene.camera.project.far)
         }
@@ -122,8 +122,8 @@ class TrianglesBatchingShadowRenderer {
         const gl = scene.canvas.gl;
         const program = this._program;
         program.bind();
-        gl.uniformMatrix4fv(this._uShadowViewMatrix, false, frameCtx.shadowViewMatrix);
-        gl.uniformMatrix4fv(this._uShadowProjMatrix, false, frameCtx.shadowProjMatrix);
+        gl.uniformMatrix4fv(this._uShadowViewMatrix, false, Float32Array.from(frameCtx.shadowViewMatrix));
+        gl.uniformMatrix4fv(this._uShadowProjMatrix, false, Float32Array.from(frameCtx.shadowProjMatrix));
         this._lastLightId = null;
     }
 

@@ -45,7 +45,7 @@ class TrianglesInstancingShadowRenderer {
             this._bindProgram(frameCtx, instancingLayer);
         }
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, instancingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, Float32Array.from(instancingLayer._state.positionsDecodeMatrix));
 
         this._aModelMatrixCol0.bindArrayBuffer(state.modelMatrixCol0Buf);
         this._aModelMatrixCol1.bindArrayBuffer(state.modelMatrixCol1Buf);
@@ -157,8 +157,8 @@ class TrianglesInstancingShadowRenderer {
         const gl = scene.canvas.gl;
         const program = this._program;
         program.bind();
-        gl.uniformMatrix4fv(this._uShadowViewMatrix, false, frameCtx.shadowViewMatrix);
-        gl.uniformMatrix4fv(this._uShadowProjMatrix, false, frameCtx.shadowProjMatrix);
+        gl.uniformMatrix4fv(this._uShadowViewMatrix, false, Float32Array.from(frameCtx.shadowViewMatrix));
+        gl.uniformMatrix4fv(this._uShadowProjMatrix, false, Float32Array.from(frameCtx.shadowProjMatrix));
         this._lastLightId = null;
     }
 

@@ -47,8 +47,9 @@ class TrianglesBatchingEdgesColorRenderer {
 
         gl.uniform1i(this._uRenderPass, renderPass);
 
-        gl.uniformMatrix4fv(this._uViewMatrix, false, (rtcCenter) ? createRTCViewMat(camera.viewMatrix, rtcCenter) : camera.viewMatrix);
-        gl.uniformMatrix4fv(this._uWorldMatrix, false, model.worldMatrix);
+        const tempMatrix = (rtcCenter) ? createRTCViewMat(camera.viewMatrix, rtcCenter) : camera.viewMatrix;
+        gl.uniformMatrix4fv(this._uViewMatrix, false, Float32Array.from(tempMatrix));
+        gl.uniformMatrix4fv(this._uWorldMatrix, false, Float32Array.from(model.worldMatrix));
 
         const numSectionPlanes = scene._sectionPlanesState.sectionPlanes.length;
         if (numSectionPlanes > 0) {
@@ -74,7 +75,7 @@ class TrianglesBatchingEdgesColorRenderer {
             }
         }
 
-        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false, batchingLayer._state.positionsDecodeMatrix);
+        gl.uniformMatrix4fv(this._uPositionsDecodeMatrix, false,Float32Array.from( batchingLayer._state.positionsDecodeMatrix));
 
         this._aPosition.bindArrayBuffer(state.positionsBuf);
         this._aColor.bindArrayBuffer(state.colorsBuf);
@@ -141,7 +142,7 @@ class TrianglesBatchingEdgesColorRenderer {
 
         program.bind();
 
-        gl.uniformMatrix4fv(this._uProjMatrix, false, project.matrix);
+        gl.uniformMatrix4fv(this._uProjMatrix, false, Float32Array.from(project.matrix));
 
         if (scene.logarithmicDepthBufferEnabled) {
             const logDepthBufFC = 2.0 / (Math.log(project.far + 1.0) / Math.LN2);
